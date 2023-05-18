@@ -261,13 +261,14 @@
             filters.forEach(function (filter) {
                 // Lấy đối tượng cột từ tên trường
                 var column = table.getColumn(filter.field);
-                headerFilterEl = column.getElement().querySelector(".tabulator-header-filter input");
-
-                if (headerFilterEl) {
-                    if (headerFilterEl.nodeName === "INPUT") {
-                        headerFilterEl.value = filter.value;
-                    } else if (headerFilterEl.nodeName === "SELECT") {
-                        headerFilterEl.value = filter.value;
+                if (column) {
+                    headerFilterEl = column.getElement().querySelector(".tabulator-header-filter input");
+                    if (headerFilterEl) {
+                        if (headerFilterEl.nodeName === "INPUT") {
+                            headerFilterEl.value = filter.value;
+                        } else if (headerFilterEl.nodeName === "SELECT") {
+                            headerFilterEl.value = filter.value;
+                        }
                     }
                 }
             });
