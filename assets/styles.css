@@ -71,3 +71,8 @@ body {
     font-size: 13px;
     padding: 0 20px;
 }
+
+.tabulator-header-filter > input {
+    color: #d21818;
+    font-weight: bolder;
+}

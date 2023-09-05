@@ -89,7 +89,7 @@ var table = new Tabulator("#datatable", {
     layout: "fitColumns",   // Cấu hình bố cục của bảng
     stickyHeader: true,
     columns: [
-        { title: "STT<br><button id='clearFilter'>Xóa tìm kiếm</button>", width: 100, field: "rownum", formatter: "rownum", headerSort: false },
+        { title: "STT<br><button class='btn btn-danger btn-sm' id='clearFilter'>Xóa tìm kiếm</button>", width: 100, field: "rownum", formatter: "rownum", headerSort: false },
         // Cấu hình các cột
         { title: "Tên sản phẩm", field: "Name", headerFilter: true, headerFilterPlaceholder: "Tìm tên sản phẩm..." },
         { title: "Ban nhạc/Nghệ sĩ", field: "Band", formatter: arrayFormatter, sorter: arraySorter, headerFilter: true, headerFilterPlaceholder: "Tìm nghệ sĩ/ban nhạc..." },
