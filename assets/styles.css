@@ -1,0 +1,73 @@
+/* Cài đặt font chữ */
+body {
+    font-family: "Open Sans", sans-serif;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.25em 0.4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    color: #fff;
+    background-color: #333;
+}
+
+.badge.album {
+    background-color: #2bbbad !important;
+}
+
+.badge.ep {
+    background-color: #a6c !important;
+}
+
+.badge.single {
+    background-color: #fb3 !important;
+}
+
+.badge.documentary {
+    background-color: rgb(79, 109, 243) !important;
+}
+
+.badge.book {
+    background-color: rgb(238, 109, 109) !important;
+}
+
+#datatable {
+    max-height: calc(100vh - 40px);
+    margin: 0;
+    box-sizing: border-box;
+}
+
+#datatable .tabulator-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+#datatable .tabulator-cell {
+    white-space: normal;
+    line-height: 1.25;
+}
+
+#clearFilter {
+    font-size: 10px;
+    line-height: 21px;
+    margin-top: 2px;
+}
+
+.copyright {
+    line-height: 40px;
+    float: right;
+    font-size: 13px;
+    padding: 0 20px;
+}
