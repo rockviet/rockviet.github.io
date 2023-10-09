@@ -84,6 +84,7 @@ var dateSorter = function (a, b) {
 
 // Cấu hình bảng Tabulator
 var table = new Tabulator("#datatable", {
+    responsiveLayout: "hide",
     ajaxURL: "data.json",   // URL của file JSON
     ajaxConfig: "GET",      // Phương thức gửi yêu cầu
     layout: "fitColumns",   // Cấu hình bố cục của bảng
