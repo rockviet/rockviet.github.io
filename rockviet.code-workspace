@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"name": "Sandbox - FileSystem",
+			"uri": "ccfs://current-sandbox"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "rockviet"
+	}
+}
