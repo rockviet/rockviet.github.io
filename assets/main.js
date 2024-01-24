@@ -35,11 +35,6 @@ var dateConverter = function (dateStr) {
     }
 }
 
-
-var filterByValue = function (value) {
-
-};
-
 // Tạo đối tượng formatter cho cột chứa mảng dữ liệu
 var arrayFormatter = function (cell, formatterParams, onRendered) {
     var value = cell.getValue();
@@ -114,7 +109,6 @@ var table = new Tabulator("#datatable", {
 
 // Hàm cập nhật tham số tìm kiếm của URL
 var updateSearchParams = function (filters) {
-
     // Cập nhật URL với các tham số tìm kiếm mới
     var newSearchParams = new URLSearchParams();
     // Cập nhật các tham số tìm kiếm của URL
@@ -204,44 +198,4 @@ table.on("tableBuilt", function () {
 
     // Gán các giá trị filter vào header input
     setFiltersToHeaderInputs();
-});
-
-// Submit form feedback
-var form = document.getElementById("feedback-form");
-async function handleSubmit(event) {
-    event.preventDefault();
-    var status = document.getElementById("feedback-form-status");
-    var data = new FormData(event.target);
-    fetch(event.target.action, {
-        method: form.method,
-        body: data,
-        headers: {
-            'Accept': 'application/json'
-        }
-    }).then(response => {
-        if (response.ok) {
-            status.innerHTML = "Đã gửi thành công! Cảm ơn bạn!!";
-            form.reset()
-        } else {
-            response.json().then(data => {
-                if (Object.hasOwn(data, "errors")) {
-                    status.innerHTML = data["errors"].map(error => error["message"]).join(", ")
-                } else {
-                    status.innerHTML = "Oops! Có lỗi xảy ra."
-                }
-            });
-        }
-        $("#feedback-form-status").show();
-        $("#feedback-form").hide();
-    }).catch(error => {
-        status.innerHTML = "Oops! Có lỗi xảy ra.";
-        $("#feedback-form-status").show();
-        $("#feedback-form").hide();
-    });
-}
-form.addEventListener("submit", handleSubmit);
-
-$("#feedbackModal").on("hidden.bs.modal", function (e) {
-    $("#feedback-form-status").hide();
-    $("#feedback-form").show();
 });

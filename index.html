@@ -33,17 +33,6 @@
 
     <!-- Custom Styles -->
     <link rel="stylesheet" href="assets/styles.css" />
-
-    <!-- G-Recaptcha -->
-    <script src="//www.google.com/recaptcha/api.js?render=6Ld3xz8pAAAAAKehTHHKaPWXQDbXEXjA3trQOcAU"></script>
-    <script>
-        grecaptcha.ready(function () {
-            grecaptcha.execute('6Ld3xz8pAAAAAKehTHHKaPWXQDbXEXjA3trQOcAU', { action: 'submit' }).then(function (token) {
-                console.info("got token: " + token);
-                document.getElementById('g-recaptcha-response').value = token;
-            });
-        });
-    </script>
 </head>
 
 <body>
@@ -52,35 +41,6 @@
     <p class="copyright">Được làm ra bởi <a href="mailto:viet.tran241@gmail.com">@viet241</a> với
         <u>ChatGPT</u>, dùng thư viện <u>Tabulator</u>
     </p>
-
-    <button type="button" class="btn btn-secondary btn-sm m-2 mb-0" data-bs-toggle="modal"
-        data-bs-target="#feedbackModal">Đóng góp</button>
-
-    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="feedbackModalLabel">Đóng góp thông tin</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p id="feedback-form-status"></p>
-                    <form id="feedback-form" action="//formspree.io/f/xknlbvad" method="POST">
-                        <div class="mb-3">
-                            <label for="contact" class="form-label">Phương thức liên lạc (nếu cần):</label>
-                            <input type="text" class="form-control" id="contact" name="contact">
-                        </div>
-                        <div class="mb-3">
-                            <label for="message" class="form-label">Nội dung:</label>
-                            <textarea class="form-control" id="message" name="message" rows="10" required></textarea>
-                        </div>
-                        <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" />
-                        <button type="submit" class="btn btn-secondary">Gửi</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Libraries -->
     <script src="//unpkg.com/tabulator-tables@5.4.4/dist/js/tabulator.min.js"></script>
