@@ -11,6 +11,7 @@
     <!-- Tabulator -->
     <link rel="stylesheet" href="//unpkg.com/tabulator-tables@5.4.4/dist/css/tabulator.min.css">
     <link rel="stylesheet" href="//unpkg.com/tabulator-tables@5.4.4/dist/css/tabulator_semanticui.min.css">
+    <link rel="canonical" href="https://rockviet.github.io/" />
 
     <!-- Favicon / Appicon -->
     <link rel="apple-touch-icon" sizes="57x57" href="favicon/apple-icon-57x57.png">
@@ -36,6 +37,17 @@
 </head>
 
 <body>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(function (registration) {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch(function (error) {
+                    console.log('Service Worker registration failed:', error);
+                });
+        }
+    </script>
     <div id="datatable"></div>
 
     <p class="copyright">Được làm ra bởi <a href="mailto:viet.tran241@gmail.com">@viet241</a> với
