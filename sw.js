@@ -58,28 +58,30 @@ var URLS = [
 // Respond with cached resources
 self.addEventListener('fetch', function (e) {
     console.log('fetch request : ' + e.request.url);
+
     e.respondWith(
-        caches.match(e.request).then(function (request) {
-            if (request) {
-                console.log('responding with cache : ' + e.request.url);
-                return request;
-            } else {
-                console.log('file is not cached, fetching : ' + e.request.url);
-                return fetch(e.request);
-            }
+        fetch(e.request)
+            .then(function (response) {
+                // Check if we received a valid response
+                if (!response || response.status !== 200 || response.type !== 'basic') {
+                    // If not, fetch from cache
+                    return caches.match(e.request);
+                }
 
-            // return request || fetch(e.request)
-        })
-    );
-});
+                // If we received a valid response, clone it and store it in the cache
+                var responseToCache = response.clone();
 
-// Cache resources
-self.addEventListener('install', function (e) {
-    e.waitUntil(
-        caches.open(CACHE_NAME).then(function (cache) {
-            console.log('installing cache : ' + CACHE_NAME);
-            return cache.addAll(URLS);
-        })
+                caches.open(CACHE_NAME)
+                    .then(function (cache) {
+                        cache.put(e.request, responseToCache);
+                    });
+
+                return response;
+            })
+            .catch(function () {
+                // If an error occurred while fetching, load from cache
+                return caches.match(e.request);
+            })
     );
 });
 
