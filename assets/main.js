@@ -57,6 +57,11 @@ var formatFormatter = function (cell, formatterParams, onRendered) {
     }).join(" ");
 };
 
+var nameFormatter = function (cell, formatterParams, onRendered) {
+    var value = cell.getValue();
+    return '<span class="name">' + value + '</span>';
+};
+
 // Tạo đối tượng sorter cho cột có kiểu array
 var arraySorter = function (a, b) {
     return a.join().localeCompare(b.join());
@@ -77,6 +82,26 @@ var dateSorter = function (a, b) {
     }
 };
 
+// Hàm kiểm tra xem ngày có phải là ngày trong tương lai hay không
+var isFutureDate = function (dateStr) {
+    var currentDate = new Date();
+    var inputDate = new Date(dateConverter(dateStr));
+    return inputDate > currentDate;
+};
+
+// Hàm áp dụng highlight cho các row có ngày trong tương lai
+var applyFutureDateHighlight = function () {
+    var rows = table.getRows();
+    rows.forEach(function (row) {
+        var date = row.getData().Date;
+        if (isFutureDate(date)) {
+            row.getElement().classList.add("future-date");
+        } else {
+            row.getElement().classList.remove("future-date");
+        }
+    });
+};
+
 // Cấu hình bảng Tabulator
 var table = new Tabulator("#datatable", {
     responsiveLayout: "hide",
@@ -87,7 +112,7 @@ var table = new Tabulator("#datatable", {
     columns: [
         { title: "STT<br><button class='btn btn-danger btn-sm' id='clearFilter'>Xóa tìm kiếm</button>", width: 100, field: "rownum", formatter: "rownum", headerSort: false },
         // Cấu hình các cột
-        { title: "Tên sản phẩm", field: "Name", headerFilter: true, headerFilterPlaceholder: "Tìm tên sản phẩm..." },
+        { title: "Tên sản phẩm", field: "Name", formatter: nameFormatter, headerFilter: true, headerFilterPlaceholder: "Tìm tên sản phẩm..." },
         { title: "Ban nhạc/Nghệ sĩ", field: "Band", formatter: arrayFormatter, sorter: arraySorter, headerFilter: true, headerFilterPlaceholder: "Tìm nghệ sĩ/ban nhạc..." },
         { title: "Loại đĩa nhạc", maxWidth: 200, field: "AlbType", formatter: typeFormatter, hozAlign: "center", sorter: arraySorter, headerFilter: true, headerFilterPlaceholder: "Album/EP/Single/.." },
         { title: "Thể loại", field: "Genre", formatter: arrayFormatter, sorter: arraySorter, headerFilter: true, headerFilterPlaceholder: "Tìm thể loại..." },
@@ -186,6 +211,7 @@ table.on("tableBuilt", function () {
     table.on("dataFiltered", function (filters, row) {
         // Cập nhật tham số tìm kiếm của URL
         updateSearchParams(filters);
+        applyFutureDateHighlight();
     });
 
     // Đăng ký sự kiện "click" cho nút xóa bộ lọc
@@ -198,4 +224,5 @@ table.on("tableBuilt", function () {
 
     // Gán các giá trị filter vào header input
     setFiltersToHeaderInputs();
+    applyFutureDateHighlight();
 });

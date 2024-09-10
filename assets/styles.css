@@ -76,3 +76,20 @@ body {
     color: #d21818;
     font-weight: bolder;
 }
+
+.future-date {
+
+    .name::after {
+        display: block !important;
+        width: fit-content;
+        content: "sắp phát hành";
+        background-color: orange;
+        color: #fff;
+        display: inline-block;
+        font-size: 0.7em;
+        padding: .2em .5em;
+        border-radius: 5px;
+        white-space: nowrap;
+        margin-top: .5em;
+    }
+}
