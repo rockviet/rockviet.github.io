@@ -1,5 +1,5 @@
 var APP_PREFIX = 'rockviet_';
-var VERSION = '1';
+var VERSION = '2';
 var CACHE_NAME = APP_PREFIX + VERSION;
 var URLS = [
     '/',
@@ -55,54 +55,34 @@ var URLS = [
     '/favicon/ms-icon-144x144.png'
 ];
 
-// Respond with cached resources
-self.addEventListener('fetch', function (e) {
-    console.log('fetch request : ' + e.request.url);
-
-    e.respondWith(
-        fetch(e.request)
-            .then(function (response) {
-                // Check if we received a valid response
-                if (!response || response.status !== 200 || response.type !== 'basic') {
-                    // If not, fetch from cache
-                    return caches.match(e.request);
-                }
-
-                // If we received a valid response, clone it and store it in the cache
-                var responseToCache = response.clone();
-
-                caches.open(CACHE_NAME)
-                    .then(function (cache) {
-                        cache.put(e.request, responseToCache);
-                    });
-
-                return response;
-            })
-            .catch(function () {
-                // If an error occurred while fetching, load from cache
-                return caches.match(e.request);
-            })
+self.addEventListener('fetch', (event) => {
+    event.respondWith(
+        caches.match(event.request).then((cachedResponse) => {
+            // Try to fetch the resource from the network
+            return fetch(event.request)
+                .then((networkResponse) => {
+                    // If the network request was successful, update the cache
+                    if (networkResponse && networkResponse.status === 200) {
+                        const responseToCache = networkResponse.clone();
+                        caches.open(CACHE_NAME).then((cache) => {
+                            cache.put(event.request, responseToCache);
+                        });
+                    }
+                    return networkResponse;
+                })
+                .catch(() => {
+                    // If the network request fails, return the cached version
+                    return cachedResponse;
+                });
+        })
     );
 });
 
-// Delete outdated caches
-self.addEventListener('activate', function (e) {
-    e.waitUntil(
-        caches.keys().then(function (keyList) {
-            // `keyList` contains all cache names under your username.github.io
-            // filter out ones that has this app prefix to create white list
-            var cacheWhitelist = keyList.filter(function (key) {
-                return key.indexOf(APP_PREFIX);
-            });
-            // add current cache name to white list
-            cacheWhitelist.push(CACHE_NAME);
-
-            return Promise.all(keyList.map(function (key, i) {
-                if (cacheWhitelist.indexOf(key) === -1) {
-                    console.log('deleting cache : ' + keyList[i]);
-                    return caches.delete(keyList[i]);
-                }
-            }));
+// Precache resources
+self.addEventListener('install', (event) => {
+    event.waitUntil(
+        caches.open(CACHE_NAME).then((cache) => {
+            return cache.addAll(URLS);
         })
     );
 });
