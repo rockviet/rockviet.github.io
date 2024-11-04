@@ -115,7 +115,7 @@ var table = new Tabulator("#datatable", {
         { title: "Tên sản phẩm", field: "Name", formatter: nameFormatter, headerFilter: true, headerFilterPlaceholder: "Tìm tên sản phẩm..." },
         { title: "Ban nhạc/Nghệ sĩ", field: "Band", formatter: arrayFormatter, sorter: arraySorter, headerFilter: true, headerFilterPlaceholder: "Tìm nghệ sĩ/ban nhạc..." },
         { title: "Loại đĩa nhạc", maxWidth: 200, field: "AlbType", formatter: typeFormatter, hozAlign: "center", sorter: arraySorter, headerFilter: true, headerFilterPlaceholder: "Album/EP/Single/.." },
-        { title: "Thể loại", field: "Genre", formatter: arrayFormatter, sorter: arraySorter, headerFilter: true, headerFilterPlaceholder: "Tìm thể loại..." },
+        { title: "Thể loại", field: "Genres", formatter: arrayFormatter, sorter: arraySorter, headerFilter: true, headerFilterPlaceholder: "Tìm thể loại..." },
         { title: "Định dạng", maxWidth: 150, field: "Format", formatter: formatFormatter, hozAlign: "center", sorter: arraySorter, headerFilter: true, headerFilterPlaceholder: "CD/DVD/USB/Vinyl/..." },
         { title: "Ngày phát hành", maxWidth: 200, field: "Date", sorter: dateSorter, headerFilter: true, headerFilterPlaceholder: "Tìm ngày..." },
         { title: "Năm", field: "Year", visible: false }
