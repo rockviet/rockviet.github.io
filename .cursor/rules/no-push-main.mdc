@@ -1,0 +1,20 @@
+---
+description: Do not push to main (or remote) unless the user explicitly asks
+alwaysApply: true
+---
+
+# Git push safety
+
+- **Never** `git push` to `main` / `master` unless the user explicitly asks to push (or to deploy via pushing `main`).
+- **Never** auto-push after a commit, even if the change is ready and CI would deploy on push.
+- Only `git commit` when the user explicitly asks to commit (same as existing commit rules).
+- If work is done and deploy needs a push, tell the user the branch is ready and ask whether to push — do not push first.
+
+## Examples
+
+```text
+❌ BAD: commit then immediately `git push origin main`
+❌ BAD: push "to apply" a workflow/feature without being asked
+✅ GOOD: commit only if asked; stop and say "ready to push when you want"
+✅ GOOD: `git push origin main` only after user says e.g. "push lên main" / "push đi"
+```

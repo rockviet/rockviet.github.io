@@ -23,12 +23,23 @@ interface Props {
 
 export function AlbumRow({ album, index }: Props) {
     const badgeBg = TYPE_COLORS[album.albType] ?? "bg-badge-other";
+    const bands = album.band.split("/").map((s) => s.trim()).filter(Boolean);
 
     return (
         <tr className="border-b border-border hover:bg-card-hover transition-colors">
             <td className="py-3 px-3 text-muted-foreground tabular-nums">{index}</td>
             <td className="py-3 px-3 font-medium text-foreground">{album.name}</td>
-            <td className="py-3 px-3 text-muted-foreground">{album.band}</td>
+            <td className="py-3 px-3 text-muted-foreground">
+                {bands.length > 1 ? (
+                    <div className="flex flex-col gap-0.5">
+                        {bands.map((b, i) => (
+                            <span key={`${b}-${i}`}>{b}</span>
+                        ))}
+                    </div>
+                ) : (
+                    album.band
+                )}
+            </td>
             <td className="py-3 px-3">
                 <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold ${badgeBg}`}>
                     {album.albType}
@@ -44,7 +55,7 @@ export function AlbumRow({ album, index }: Props) {
                 </div>
             </td>
             <td className="py-3 px-3" title={album.format}>
-                <div className="flex justify-center gap-1 text-muted-foreground">
+                <div className="flex justify-center gap-1">
                     {album.format.split("/").map((f) => f.trim()).filter(Boolean).map((f) => (
                         <FormatIcon key={f} format={f} />
                     ))}

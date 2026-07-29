@@ -1,14 +1,106 @@
+import { useId, type FC } from "react";
+import { Popover } from "@base-ui/react/popover";
+import { cn } from "@/lib/utils";
+
 interface Props {
     format: string;
     className?: string;
+    showTooltip?: boolean;
 }
 
-function CdIcon({ className }: { className?: string }) {
+interface DiscGradient {
+    stops: Array<{ offset: string; color: string }>;
+}
+
+const DISC_GRADIENTS: Record<string, DiscGradient> = {
+    CD: {
+        stops: [
+            { offset: "0%", color: "#09090b" },
+            { offset: "18%", color: "#09090b" },
+            { offset: "22%", color: "#e0f2fe" },
+            { offset: "40%", color: "#38bdf8" },
+            { offset: "58%", color: "#7dd3fc" },
+            { offset: "76%", color: "#bae6fd" },
+            { offset: "100%", color: "#0ea5e9" },
+        ],
+    },
+    "Mini CD": {
+        stops: [
+            { offset: "0%", color: "#09090b" },
+            { offset: "18%", color: "#09090b" },
+            { offset: "22%", color: "#ecfdf5" },
+            { offset: "40%", color: "#2dd4bf" },
+            { offset: "58%", color: "#5eead4" },
+            { offset: "76%", color: "#99f6e4" },
+            { offset: "100%", color: "#14b8a6" },
+        ],
+    },
+    DVD: {
+        stops: [
+            { offset: "0%", color: "#09090b" },
+            { offset: "18%", color: "#09090b" },
+            { offset: "22%", color: "#f5f3ff" },
+            { offset: "40%", color: "#8b5cf6" },
+            { offset: "58%", color: "#a78bfa" },
+            { offset: "76%", color: "#c4b5fd" },
+            { offset: "100%", color: "#7c3aed" },
+        ],
+    },
+    VCD: {
+        stops: [
+            { offset: "0%", color: "#09090b" },
+            { offset: "18%", color: "#09090b" },
+            { offset: "22%", color: "#eff6ff" },
+            { offset: "40%", color: "#2563eb" },
+            { offset: "58%", color: "#3b82f6" },
+            { offset: "76%", color: "#60a5fa" },
+            { offset: "100%", color: "#1d4ed8" },
+        ],
+    },
+};
+
+function DiscFill({
+    gradientId,
+    stops,
+}: {
+    gradientId: string;
+    stops: DiscGradient["stops"];
+}) {
+    return (
+        <defs>
+            <radialGradient
+                id={gradientId}
+                cx="12"
+                cy="12"
+                r="10"
+                fx="12"
+                fy="12"
+                gradientUnits="userSpaceOnUse"
+            >
+                {stops.map((stop) => (
+                    <stop key={stop.offset} offset={stop.offset} stopColor={stop.color} />
+                ))}
+            </radialGradient>
+        </defs>
+    );
+}
+
+function CdIcon({
+    className,
+    gradientId,
+    stops,
+}: {
+    className?: string;
+    gradientId: string;
+    stops: DiscGradient["stops"];
+}) {
     return (
         <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <DiscFill gradientId={gradientId} stops={stops} />
+            <circle cx="12" cy="12" r="10" fill={`url(#${gradientId})`} />
             <circle cx="12" cy="12" r="10" />
-            <circle cx="12" cy="12" r="3" />
-            <path d="M12 2a10 10 0 0 1 7.07 2.93" opacity="0.3" />
+            <circle cx="12" cy="12" r="3" fill="#09090b" />
+            <path d="M12 2a10 10 0 0 1 7.07 2.93" opacity="0.35" />
         </svg>
     );
 }
@@ -16,8 +108,9 @@ function CdIcon({ className }: { className?: string }) {
 function DigitalIcon({ className }: { className?: string }) {
     return (
         <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="5" y="2" width="14" height="20" rx="2" />
-            <line x1="12" y1="18" x2="12" y2="18.01" strokeWidth="2" />
+            <rect x="6" y="2" width="12" height="20" rx="2.5" />
+            <path d="M10 9.5v5l4.5-2.5L10 9.5z" fill="currentColor" stroke="none" />
+            <line x1="12" y1="18.5" x2="12" y2="18.5" strokeWidth="2" />
         </svg>
     );
 }
@@ -25,11 +118,20 @@ function DigitalIcon({ className }: { className?: string }) {
 function CassetteIcon({ className }: { className?: string }) {
     return (
         <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="2" y="5" width="20" height="14" rx="2" />
-            <circle cx="8" cy="12" r="2" />
-            <circle cx="16" cy="12" r="2" />
-            <path d="M10 12h4" />
-            <path d="M6 19l2-4h8l2 4" />
+            {/* Compact tape body */}
+            <rect x="3" y="6" width="18" height="12" rx="2.5" />
+            {/* Label strip */}
+            <rect x="6" y="7.5" width="12" height="2.5" rx="0.5" />
+            {/* Shared reel window */}
+            <rect x="5.5" y="11" width="13" height="5" rx="1.5" />
+            {/* Two sprocket reels */}
+            <circle cx="9" cy="13.5" r="2" />
+            <circle cx="9" cy="13.5" r="0.7" fill="currentColor" />
+            <circle cx="15" cy="13.5" r="2" />
+            <circle cx="15" cy="13.5" r="0.7" fill="currentColor" />
+            {/* Corner screws */}
+            <circle cx="5" cy="8" r="0.5" fill="currentColor" />
+            <circle cx="19" cy="8" r="0.5" fill="currentColor" />
         </svg>
     );
 }
@@ -45,11 +147,21 @@ function VinylIcon({ className }: { className?: string }) {
     );
 }
 
-function DvdIcon({ className }: { className?: string }) {
+function DvdIcon({
+    className,
+    gradientId,
+    stops,
+}: {
+    className?: string;
+    gradientId: string;
+    stops: DiscGradient["stops"];
+}) {
     return (
         <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <DiscFill gradientId={gradientId} stops={stops} />
+            <circle cx="12" cy="12" r="10" fill={`url(#${gradientId})`} />
             <circle cx="12" cy="12" r="10" />
-            <circle cx="12" cy="12" r="3" />
+            <circle cx="12" cy="12" r="3" fill="#09090b" />
             <path d="M2 12h7" />
             <path d="M15 12h7" />
         </svg>
@@ -127,36 +239,124 @@ function UnknownIcon({ className }: { className?: string }) {
 function VhsIcon({ className }: { className?: string }) {
     return (
         <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="2" y="6" width="20" height="12" rx="2" />
-            <rect x="5" y="9" width="14" height="6" rx="1" />
-            <circle cx="8.5" cy="12" r="1.5" />
-            <circle cx="15.5" cy="12" r="1.5" />
-            <path d="M10 12h4" />
+            {/* Wide flat VHS shell */}
+            <rect x="1.5" y="7" width="21" height="11" rx="1.5" />
+            {/* Front protective flap */}
+            <path d="M4 18h16l-1.5-3.5H5.5L4 18z" />
+            {/* Large window */}
+            <rect x="4.5" y="8.5" width="15" height="5.5" rx="0.75" />
+            {/* Small spools inside window */}
+            <circle cx="8" cy="11.25" r="1.4" />
+            <circle cx="16" cy="11.25" r="1.4" />
+            <path d="M9.5 11.25h5" opacity="0.5" />
+            {/* Side latch notch */}
+            <path d="M20.5 10v4" />
         </svg>
     );
 }
 
-const ICON_MAP: Record<string, React.FC<{ className?: string }>> = {
-    CD: CdIcon,
-    Digital: DigitalIcon,
-    Cassette: CassetteIcon,
-    Vinyl: VinylIcon,
-    DVD: DvdIcon,
-    USB: UsbIcon,
-    Book: BookIcon,
-    "Mini CD": CdIcon,
-    VCD: DvdIcon,
-    Promotion: PromotionIcon,
-    "Double CD": CdIcon,
-    Cine: CineIcon,
-    "Reel-To-Reel": CassetteIcon,
-    VHS: VhsIcon,
-    TV: TvIcon,
-    Unknown: UnknownIcon,
+function ReelToReelIcon({ className }: { className?: string }) {
+    return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="7" cy="10" r="5" />
+            <circle cx="7" cy="10" r="1.5" fill="currentColor" />
+            <circle cx="17" cy="10" r="5" />
+            <circle cx="17" cy="10" r="1.5" fill="currentColor" />
+            <path d="M12 7.5v5" opacity="0.4" />
+            <rect x="4" y="17" width="16" height="3.5" rx="1" />
+            <path d="M7 15v2" />
+            <path d="M17 15v2" />
+        </svg>
+    );
+}
+
+const COLOR_MAP: Record<string, string> = {
+    CD: "text-sky-400",
+    Digital: "text-emerald-400",
+    Cassette: "text-amber-400",
+    Vinyl: "text-rose-400",
+    DVD: "text-violet-400",
+    USB: "text-lime-400",
+    Book: "text-orange-400",
+    "Mini CD": "text-teal-400",
+    VCD: "text-blue-500",
+    Promotion: "text-yellow-400",
+    Cine: "text-pink-400",
+    "Reel-To-Reel": "text-teal-300",
+    VHS: "text-fuchsia-400",
+    TV: "text-violet-300",
+    Unknown: "text-muted-foreground",
 };
 
-export function FormatIcon({ format, className = "w-5 h-5" }: Props) {
-    const primary = format.split("/")[0].trim();
-    const Icon = ICON_MAP[primary] ?? UnknownIcon;
+function FormatGlyph({
+    format,
+    className,
+    gradientId,
+}: {
+    format: string;
+    className?: string;
+    gradientId: string;
+}) {
+    const disc = DISC_GRADIENTS[format];
+    if ((format === "CD" || format === "Mini CD") && disc) {
+        return <CdIcon className={className} gradientId={gradientId} stops={disc.stops} />;
+    }
+    if ((format === "DVD" || format === "VCD") && disc) {
+        return <DvdIcon className={className} gradientId={gradientId} stops={disc.stops} />;
+    }
+
+    const icons: Record<string, FC<{ className?: string }>> = {
+        Digital: DigitalIcon,
+        Cassette: CassetteIcon,
+        Vinyl: VinylIcon,
+        USB: UsbIcon,
+        Book: BookIcon,
+        Promotion: PromotionIcon,
+        Cine: CineIcon,
+        "Reel-To-Reel": ReelToReelIcon,
+        VHS: VhsIcon,
+        TV: TvIcon,
+        Unknown: UnknownIcon,
+    };
+    const Icon = icons[format] ?? UnknownIcon;
     return <Icon className={className} />;
+}
+
+export function FormatIcon({ format, className = "w-5 h-5", showTooltip = true }: Props) {
+    const gradientId = useId().replace(/:/g, "");
+    const primary = format.split("/")[0].trim();
+    const color = COLOR_MAP[primary] ?? COLOR_MAP.Unknown;
+    const sizeClass = primary === "Mini CD" ? "scale-80 origin-center" : undefined;
+    const icon = (
+        <FormatGlyph
+            format={primary}
+            className={cn(className, color, sizeClass)}
+            gradientId={`disc-${gradientId}`}
+        />
+    );
+
+    if (!showTooltip) {
+        return icon;
+    }
+
+    return (
+        <Popover.Root>
+            <Popover.Trigger
+                openOnHover
+                delay={0}
+                closeDelay={0}
+                className="inline-flex items-center justify-center rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+                aria-label={primary}
+            >
+                {icon}
+            </Popover.Trigger>
+            <Popover.Portal>
+                <Popover.Positioner side="top" sideOffset={6} className="z-50">
+                    <Popover.Popup className="rounded-md border border-border bg-zinc-950/95 px-2 py-1 text-xs font-medium text-foreground shadow-lg backdrop-blur-sm">
+                        {primary}
+                    </Popover.Popup>
+                </Popover.Positioner>
+            </Popover.Portal>
+        </Popover.Root>
+    );
 }

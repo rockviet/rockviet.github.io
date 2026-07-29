@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useLayoutEffect, type CSSProperties, type RefObject } from "react";
+import { createPortal } from "react-dom";
 import { FormatIcon } from "./FormatIcon";
 import { toggleSelection } from "../utils/filters";
 
@@ -8,19 +9,77 @@ interface Props {
     formats: string[];
 }
 
+function useFixedMenuStyle(
+    open: boolean,
+    triggerRef: RefObject<HTMLElement | null>,
+    options: { minWidth: number; align?: "left" | "right" },
+) {
+    const [style, setStyle] = useState<CSSProperties>({});
+
+    useLayoutEffect(() => {
+        if (!open) return;
+
+        function update() {
+            const el = triggerRef.current;
+            if (!el) return;
+            const rect = el.getBoundingClientRect();
+            const isMobile = window.matchMedia("(max-width: 767px)").matches;
+            const width = Math.max(rect.width, options.minWidth);
+            const next: CSSProperties = {
+                position: "fixed",
+                width,
+                zIndex: 80,
+            };
+
+            if (options.align === "right") {
+                next.left = Math.max(8, rect.right - width);
+            } else {
+                next.left = Math.min(rect.left, window.innerWidth - width - 8);
+            }
+
+            if (isMobile) {
+                next.bottom = window.innerHeight - rect.top + 4;
+                next.top = "auto";
+                next.maxHeight = Math.min(240, rect.top - 12);
+            } else {
+                next.top = rect.bottom + 4;
+                next.bottom = "auto";
+                next.maxHeight = Math.min(240, window.innerHeight - rect.bottom - 12);
+            }
+
+            setStyle(next);
+        }
+
+        update();
+        window.addEventListener("resize", update);
+        window.addEventListener("scroll", update, true);
+        return () => {
+            window.removeEventListener("resize", update);
+            window.removeEventListener("scroll", update, true);
+        };
+    }, [open, triggerRef, options.minWidth, options.align]);
+
+    return style;
+}
+
 export function FormatSelect({ value, onChange, formats }: Props) {
     const [open, setOpen] = useState(false);
-    const ref = useRef<HTMLDivElement>(null);
+    const rootRef = useRef<HTMLDivElement>(null);
+    const menuRef = useRef<HTMLDivElement>(null);
+    const style = useFixedMenuStyle(open, rootRef, { minWidth: 180, align: "left" });
 
     useEffect(() => {
+        if (!open) return;
+
         function handleClick(e: MouseEvent) {
-            if (ref.current && !ref.current.contains(e.target as Node)) {
-                setOpen(false);
-            }
+            const target = e.target as Node;
+            if (rootRef.current?.contains(target) || menuRef.current?.contains(target)) return;
+            setOpen(false);
         }
+
         document.addEventListener("mousedown", handleClick);
         return () => document.removeEventListener("mousedown", handleClick);
-    }, []);
+    }, [open]);
 
     function toggle(v: string) {
         onChange(toggleSelection(value, v));
@@ -33,14 +92,14 @@ export function FormatSelect({ value, onChange, formats }: Props) {
             : `${value.length} formats`;
 
     return (
-        <div ref={ref} className="relative min-w-[140px] sm:min-w-[150px]">
+        <div ref={rootRef} className="relative min-w-[140px] sm:min-w-[150px]">
             <button
                 type="button"
                 onClick={() => setOpen(!open)}
                 className="w-full flex items-center gap-2 px-3 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
             >
                 {value.length === 1 ? (
-                    <FormatIcon format={value[0]} className="w-4 h-4 text-muted-foreground shrink-0" />
+                    <FormatIcon format={value[0]} className="w-4 h-4 shrink-0" showTooltip={false} />
                 ) : null}
                 <span className={value.length ? "text-foreground truncate" : "text-muted-foreground"}>
                     {label}
@@ -54,8 +113,12 @@ export function FormatSelect({ value, onChange, formats }: Props) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
             </button>
-            {open && (
-                <div className="absolute z-50 mt-1 w-full min-w-[180px] max-h-60 overflow-auto bg-card border border-border rounded-lg shadow-xl">
+            {open && createPortal(
+                <div
+                    ref={menuRef}
+                    style={style}
+                    className="overflow-auto bg-card border border-border rounded-lg shadow-xl"
+                >
                     <button
                         type="button"
                         onClick={() => onChange([])}
@@ -79,12 +142,13 @@ export function FormatSelect({ value, onChange, formats }: Props) {
                                         </svg>
                                     ) : null}
                                 </span>
-                                <FormatIcon format={f} className="w-4 h-4 text-muted-foreground" />
+                                <FormatIcon format={f} className="w-4 h-4" showTooltip={false} />
                                 {f}
                             </button>
                         );
                     })}
-                </div>
+                </div>,
+                document.body,
             )}
         </div>
     );

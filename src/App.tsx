@@ -64,14 +64,28 @@ export default function App() {
                 </div>
             </header>
 
-            <main className="max-w-6xl mx-auto px-4 py-3 sm:py-6 space-y-3 sm:space-y-4">
-                <FilterBar
-                    search={search} onSearch={setSearch}
-                    formatsSelected={formatsSelected} onFormats={setFormatsSelected}
-                    yearsSelected={yearsSelected} onYears={setYearsSelected}
-                    formats={formats} years={years}
-                    total={albums.length} filtered={filtered.length}
-                />
+            <main className="max-w-6xl mx-auto px-4 py-3 sm:py-6 space-y-3 sm:space-y-4 max-md:pb-[calc(9.5rem+env(safe-area-inset-bottom,0px))]">
+                <div
+                    className={[
+                        "z-40 pointer-events-none overflow-visible",
+                        "max-md:fixed max-md:inset-x-0 max-md:bottom-0",
+                        "max-md:px-4 max-md:pt-2",
+                        "max-md:pb-[max(0.5rem,env(safe-area-inset-bottom,0px))]",
+                        "md:sticky md:top-0",
+                        "md:pt-[max(0.5rem,env(safe-area-inset-top,0px))]",
+                        "md:pb-2",
+                    ].join(" ")}
+                >
+                    <div className="pointer-events-auto max-md:max-w-6xl max-md:mx-auto">
+                        <FilterBar
+                            search={search} onSearch={setSearch}
+                            formatsSelected={formatsSelected} onFormats={setFormatsSelected}
+                            yearsSelected={yearsSelected} onYears={setYearsSelected}
+                            formats={formats} years={years}
+                            total={albums.length} filtered={filtered.length}
+                        />
+                    </div>
+                </div>
 
                 {loading ? (
                     <div className="flex justify-center py-20">
@@ -110,7 +124,7 @@ export default function App() {
                 )}
             </main>
 
-            <footer className="text-center text-muted-foreground text-xs py-6 border-t border-border">
+            <footer className="text-center text-muted-foreground text-xs py-6 border-t border-border max-md:pb-[calc(9.5rem+env(safe-area-inset-bottom,0px))]">
                 Rock Việt — A comprehensive database of Vietnamese rock music
             </footer>
         </div>

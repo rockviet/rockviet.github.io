@@ -8,6 +8,18 @@ import type { Album } from "../src/types";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 config({ path: resolve(__dirname, "../.env.local") });
 
+function normalizeFormat(raw: string): string {
+    const seen = new Set<string>();
+    const parts: string[] = [];
+    for (const part of raw.split("/").map((s) => s.trim()).filter(Boolean)) {
+        const format = part === "Double CD" ? "CD" : part;
+        if (seen.has(format)) continue;
+        seen.add(format);
+        parts.push(format);
+    }
+    return parts.join("/");
+}
+
 async function main() {
     const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
     const key = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
@@ -51,7 +63,7 @@ async function main() {
             band: r[colIdx("Band")] ?? "",
             albType: r[colIdx("AlbType")] ?? "",
             genres: (r[colIdx("Genres")] ?? "").split("/").map((s: string) => s.trim()).filter(Boolean),
-            format: r[colIdx("Format")] ?? "",
+            format: normalizeFormat(r[colIdx("Format")] ?? ""),
             date: dateRaw,
             year,
         });
