@@ -4,16 +4,10 @@ on:
     workflow_dispatch:
 
 permissions:
-    contents: read
-    pages: write
-    id-token: write
-
-concurrency:
-    group: pages
-    cancel-in-progress: true
+    contents: write
 
 jobs:
-    build:
+    build-deploy:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -39,16 +33,12 @@ jobs:
             - name: Build
               run: pnpm build
 
-            - uses: actions/upload-pages-artifact@v3
+            # main = full source. Site is published from gh-pages (static dist only).
+            - name: Deploy dist to gh-pages
+              uses: peaceiris/actions-gh-pages@v4
               with:
-                  path: dist
-
-    deploy:
-        needs: build
-        runs-on: ubuntu-latest
-        environment:
-            name: github-pages
-            url: ${{ steps.deployment.outputs.page_url }}
-        steps:
-            - id: deployment
-              uses: actions/deploy-pages@v4
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./dist
+                  publish_branch: gh-pages
+                  force_orphan: true
+                  enable_jekyll: false
