@@ -4,16 +4,10 @@ on:
     workflow_dispatch:
 
 permissions:
-    contents: read
-    pages: write
-    id-token: write
-
-concurrency:
-    group: pages
-    cancel-in-progress: true
+    contents: write
 
 jobs:
-    build:
+    build-deploy:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -39,16 +33,13 @@ jobs:
             - name: Build
               run: pnpm build
 
-            - uses: actions/upload-pages-artifact@v3
+            # user/org site rockviet.github.io serves from main root (legacy Pages).
+            # Keep full source on `source`; publish only dist to `main`.
+            - name: Deploy dist to main
+              uses: peaceiris/actions-gh-pages@v4
               with:
-                  path: dist
-
-    deploy:
-        needs: build
-        runs-on: ubuntu-latest
-        environment:
-            name: github-pages
-            url: ${{ steps.deployment.outputs.page_url }}
-        steps:
-            - id: deployment
-              uses: actions/deploy-pages@v4
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./dist
+                  publish_branch: main
+                  force_orphan: true
+                  enable_jekyll: false
