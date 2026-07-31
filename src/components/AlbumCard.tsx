@@ -29,7 +29,7 @@ export function AlbumCard({ album }: Props) {
         <div className="bg-card border border-border rounded-xl p-4 hover:border-accent/40 transition-colors space-y-2.5">
             <div className="flex items-start justify-between gap-2">
                 <h3 className="font-semibold text-foreground leading-tight min-w-0">{album.name}</h3>
-                <span className={`shrink-0 px-2 py-0.5 rounded-full text-xs font-semibold ${badgeBg}`}>
+                <span className={`shrink-0 px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${badgeBg}`}>
                     {album.albType}
                 </span>
             </div>

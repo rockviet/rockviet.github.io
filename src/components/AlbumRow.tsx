@@ -41,7 +41,7 @@ export function AlbumRow({ album, index }: Props) {
                 )}
             </td>
             <td className="py-3 px-3">
-                <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold ${badgeBg}`}>
+                <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${badgeBg}`}>
                     {album.albType}
                 </span>
             </td>
