@@ -1,5 +1,30 @@
 [
   {
+    "id": "00601",
+    "name": "Suy Động",
+    "band": "The MÈO",
+    "albType": "Album",
+    "genres": [
+      "Pop Rock",
+      "Alternative Rock"
+    ],
+    "format": "CD",
+    "date": "31/07/2026",
+    "year": 2026
+  },
+  {
+    "id": "00600",
+    "name": "Khi Mà",
+    "band": "Sloth",
+    "albType": "Album",
+    "genres": [
+      "Alternative Rock"
+    ],
+    "format": "Digital",
+    "date": "30/07/2026",
+    "year": 2026
+  },
+  {
     "id": "00599",
     "name": "Hư Vô",
     "band": "Deletion",
