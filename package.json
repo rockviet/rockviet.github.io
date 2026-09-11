@@ -13,7 +13,9 @@
     "icons:svg": "tsx scripts/generate-icons.ts --from-svg",
     "og": "tsx --tsconfig tsconfig.app.json scripts/generate-og.tsx",
     "assets": "pnpm icons && pnpm og",
-    "sync": "tsx scripts/sync-sheet.ts"
+    "sync": "tsx scripts/sync-sheet.ts",
+    "deploy": "gh workflow run \"Sync Sheet & Deploy\" -R rockviet/rockviet.github.io --ref main",
+    "deploy:code": "gh workflow run \"Sync Sheet & Deploy\" -R rockviet/rockviet.github.io --ref main -f sync=false"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
