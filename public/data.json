@@ -1,12 +1,25 @@
 [
   {
+    "id": "00602",
+    "name": "Growing Up",
+    "band": "ChipPunks",
+    "albType": "EP",
+    "genres": [
+      "Pop Punk",
+      "Alternative Rock"
+    ],
+    "format": "Digital",
+    "date": "05/07/2025",
+    "year": 2025
+  },
+  {
     "id": "00601",
     "name": "Suy Động",
     "band": "The MÈO",
     "albType": "Album",
     "genres": [
-      "Pop Rock",
-      "Alternative Rock"
+      "Alternative Rock",
+      "Indie Rock"
     ],
     "format": "CD",
     "date": "31/07/2026",
@@ -18,7 +31,8 @@
     "band": "Sloth",
     "albType": "Album",
     "genres": [
-      "Alternative Rock"
+      "Alternative Rock",
+      "Indie Rock"
     ],
     "format": "Digital",
     "date": "30/07/2026",
