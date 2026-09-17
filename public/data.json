@@ -1,5 +1,17 @@
 [
   {
+    "id": "00603",
+    "name": "Loài Người",
+    "band": "Tai Hoa",
+    "albType": "EP",
+    "genres": [
+      "Alternative Rock"
+    ],
+    "format": "Digital",
+    "date": "09/09/2026",
+    "year": 2026
+  },
+  {
     "id": "00602",
     "name": "Growing Up",
     "band": "ChipPunks",
